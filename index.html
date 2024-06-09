@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESP32-CAM Website</title>
+</head>
+<body>
+    <h1>ESP32-CAM Control</h1>
+    
+    <h2>Camera Feed</h2>
+    <img id="camera-feed" src="{{ url_for('video_feed') }}" width="640" height="480">
+
+    <h2>Image Capture</h2>
+    <button onclick="captureImage()">Capture Image</button>
+
+    <script>
+        function captureImage() {
+            fetch("/capture_image")
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Failed to capture image");
+                }
+                return response.blob();
+            })
+            .then(imageBlob => {
+                var url = window.URL.createObjectURL(imageBlob);
+                var link = document.createElement('a');
+                link.href = url;
+                link.download = 'captured_image.jpg';
+                link.click();
+                window.URL.revokeObjectURL(url);
+            })
+            .catch(error => {
+                console.error("Error capturing image:", error);
+            });
+        }
+    </script>
+</body>
+</html>
