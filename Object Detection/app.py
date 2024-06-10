@@ -10,7 +10,7 @@ last_processed_time = 0
 process_interval = 1  # Adjusted interval time in seconds
 
 
-ESP32_CAM_IP = "http://192.168.88.93"  # Change this to the IP address of your ESP32-CAM
+ESP32_CAM_IP = "http://192.168.xx.93"  # Change this to the IP address of your ESP32-CAM
 
 @app.route('/')
 def index():

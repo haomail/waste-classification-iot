@@ -8,7 +8,7 @@
 
 const char* ssid = "trinitrotoluene";
 const char* password = "albedoye";
-const char* serverUrl = "192.168.88.5";
+const char* serverUrl = "192.168.xx.5";
 
 WebServer server(80);
 camera_config_t camera_config; // Declare camera_config as a global variable
