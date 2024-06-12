@@ -14,22 +14,15 @@
     <h2>Image Capture</h2>
     <button onclick="captureImage()">Capture Image</button>
 
+    <h2>Classification Result</h2>
+    <p id="result"></p>
+
     <script>
         function captureImage() {
             fetch("/capture_image")
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Failed to capture image");
-                }
-                return response.blob();
-            })
-            .then(imageBlob => {
-                var url = window.URL.createObjectURL(imageBlob);
-                var link = document.createElement('a');
-                link.href = url;
-                link.download = 'captured_image.jpg';
-                link.click();
-                window.URL.revokeObjectURL(url);
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("result").textContent = "Classification: " + data.class;
             })
             .catch(error => {
                 console.error("Error capturing image:", error);
