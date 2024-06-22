@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waste Classification System</title>
+    <style>
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin-top: 50px;
+        }
+        #video_feed {
+            width: 640px; /* Adjust according to your camera feed size */
+            height: 480px; /* Adjust according to your camera feed size */
+            border: 2px solid black;
+        }
+        #classification_result {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Waste Classification System</h1>
+        <img id="video_feed" src="{{ url_for('video_feed') }}" alt="Video Feed">
+        <div id="classification_result">
+            Classification Result: <span id="result"></span>
+        </div>
+    </div>
+    
+    <script>
+        function classifyImage() {
+            const video = document.getElementById('video_feed');
+            const canvas = document.createElement('canvas');
+            canvas.width = video.width;
+            canvas.height = video.height;
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            canvas.toBlob(function(blob) {
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/classify_image", true);
+                xhr.responseType = "text";
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        document.getElementById("result").textContent = xhr.responseText;
+                        sendClassification(xhr.responseText);
+                    } else {
+                        console.error("Error classifying image. Status:", xhr.status);
+                    }
+                };
+                xhr.onerror = function() {
+                    console.error("Network error while classifying image");
+                };
+                xhr.send(blob);
+            }, 'image/jpeg');
+        }
+
+        function sendClassification(result) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "http://192.168.74.50/waste_classification", true); // Adjust IP address accordingly
+            xhr.setRequestHeader("Content-Type", "text/plain");
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    console.log("Servo controlled successfully");
+                } else {
+                    console.error("Error controlling servo. Status:", xhr.status);
+                }
+            };
+            xhr.onerror = function() {
+                console.error("Network error while controlling servo");
+            };
+            xhr.send(result);
+        }
+
+        setInterval(classifyImage, 5000); // Adjust interval as needed
+    </script>
+</body>
+</html>
