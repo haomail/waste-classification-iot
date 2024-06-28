@@ -27,6 +27,10 @@
             padding: 10px 20px;
             font-size: 16px;
         }
+        #download_link {
+            margin-top: 20px;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -37,6 +41,7 @@
         <div id="classification_result">
             Jenis Sampah: <span id="class_label"></span>
         </div>
+        <a id="download_link" download="captured_image.jpg">Download Captured Image</a>
     </div>
     
     <script>
@@ -48,6 +53,13 @@
             const context = canvas.getContext('2d');
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
             canvas.toBlob(function(blob) {
+                // Create a download link for the image
+                const downloadLink = document.getElementById('download_link');
+                const url = URL.createObjectURL(blob);
+                downloadLink.href = url;
+                downloadLink.style.display = 'block';
+
+                // Send the image to the server for classification
                 var xhr = new XMLHttpRequest();
                 xhr.open("POST", "/classify_image", true);
                 xhr.responseType = "text";
