@@ -8,7 +8,7 @@ import time
 import hashlib
 
 app = Flask(__name__)
-model = load_model('waste-classification.h5')
+model = load_model('waste-classification-120.h5')
 
 classify_interval = 6  # Adjust the interval as needed in seconds
 last_classify_time = time.time()
@@ -18,7 +18,7 @@ ESP32_CAM_IP = "http://192.168.74.50"  # Static IP address of your ESP32-CAM
 
 # Function to preprocess a frame for model prediction
 def preprocess_frame(frame):
-    frame = cv2.resize(frame, (160, 160))
+    frame = cv2.resize(frame, (120, 120))
     frame = frame.astype('float32') / 255.0
     frame = np.expand_dims(frame, axis=0)
     return frame
