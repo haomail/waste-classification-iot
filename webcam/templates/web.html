@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Waste Classification System</title>
+    <title>Klasifikasi Jenis Sampah Otomatis Menggunakan Metode CNN Berbasis Internet of Things</title>
     <style>
         .container {
             display: flex;
@@ -22,14 +22,20 @@
             font-size: 20px;
             font-weight: bold;
         }
+        #classify_button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Waste Classification System</h1>
+        <h1>Klasifikasi Jenis Sampah Otomatis Menggunakan Metode CNN Berbasis Internet of Things</h1>
         <img id="video_feed" src="{{ url_for('video_feed') }}" alt="Video Feed">
+        <button id="classify_button" onclick="classifyImage()">Klasifikasi Sampah</button>
         <div id="classification_result">
-            Classification Result: <span id="result"></span>
+            Jenis Sampah: <span id="class_label"></span>
         </div>
     </div>
     
@@ -47,7 +53,9 @@
                 xhr.responseType = "text";
                 xhr.onload = function() {
                     if (xhr.status === 200) {
-                        document.getElementById("result").textContent = xhr.responseText;
+                        const result = xhr.responseText;
+                        const label = result === 'O' ? 'Organik' : 'Anorganik';
+                        document.getElementById("class_label").textContent = label;
                     } else {
                         console.error("Error classifying image. Status:", xhr.status);
                     }
@@ -58,8 +66,6 @@
                 xhr.send(blob);
             }, 'image/jpeg');
         }
-
-        setInterval(classifyImage, 6000); // Adjust interval as needed
     </script>
 </body>
 </html>

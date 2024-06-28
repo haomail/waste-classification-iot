@@ -4,13 +4,13 @@ import tensorflow as tf
 from tensorflow.keras.models import load_model
 import numpy as np
 
-model = load_model('waste-classification.h5')
+model = load_model('waste-classification-120.h5')
 
 app = Flask(__name__)
 
 def preprocess_frame(frame):
     # Preprocess the frame for model prediction
-    frame = cv2.resize(frame, (160, 160)) 
+    frame = cv2.resize(frame, (120, 120)) 
     frame = frame.astype('float32') / 255.0
     frame = np.expand_dims(frame, axis=0)  # Add batch dimension
     return frame
